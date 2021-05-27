@@ -7,6 +7,7 @@ var page = 0;
 var maxPages = 0;
 
 let currentHistory = undefined;
+let bestPlayers = undefined;
 
 document.getElementById("getData").onclick = getData;
 document.getElementById("left").onclick = left;
@@ -31,6 +32,18 @@ function getData(e)
     maxPages = Math.trunc(currentHistory.length / 15);
 
     refreshTable();
+  });
+}
+
+function getBestPlayers(){
+  var url = "http://localhost:25565/accounts/top10";
+
+
+  $.get(url, function(data, status){
+
+    bestPlayers = data.bestPlayers;
+
+    refreshBestPlayers();
   });
 }
 
@@ -69,3 +82,26 @@ function refreshTable()
 
   document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
 }
+
+function refreshBestPlayers()
+{
+
+  document.getElementById("bestPlayersTable").innerHTML = "";
+
+  for (let i = 0; i <= bestPlayers.length; i++) {
+    const element = bestPlayers[i];
+    
+    var str = "<tr>"
+    str += "<td>" + element.nick + "</td>";
+    str += "<td>" + element.rating + "</td>";
+    str += "<td>" + element.bestCharacter + "</td>";
+    str += "<td>" + element.victoryPercentage + "</td>";
+    str += "</tr>";
+
+    document.getElementById("bestPlayersTable").innerHTML += str;
+  }
+}
+
+window.onload = function() {
+  //getBestPlayers();
+};
