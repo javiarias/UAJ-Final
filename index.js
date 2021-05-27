@@ -1,4 +1,4 @@
-const MongoJS = require('../modules/mongoJS.js');
+const MongoJS = require('./mongoJS.js');
 
 //import express from 'express';
 const Express = require('express');

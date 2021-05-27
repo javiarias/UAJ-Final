@@ -18,7 +18,12 @@ document.getElementById("currentPage").innerHTML = "0 / 0";
 
 function getData(e)
 {
-  $.get("http://localhost:25565/accounts/by-id/3", function(data, status){
+  var id = document.getElementById("searchID").value;
+
+  var url = "http://localhost:25565/accounts/by-id/" + id;
+
+
+  $.get(url, function(data, status){
 
     currentHistory = data.currentHistory;
     page = 0;
