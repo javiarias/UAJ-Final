@@ -7,7 +7,6 @@ var page = 0;
 var maxPages = 0;
 
 let currentHistory = undefined;
-let bestPlayers = undefined;
 
 document.getElementById("getData").onclick = getData;
 document.getElementById("left").onclick = left;
@@ -32,19 +31,12 @@ function getData(e)
     maxPages = Math.trunc(currentHistory.length / 15);
 
     refreshTable();
-  });
-}
-
-function getBestPlayers(){
-  var url = "http://localhost:25565/accounts/top10";
-
-
-  $.get(url, function(data, status){
-
-    bestPlayers = data.bestPlayers;
-
-    refreshBestPlayers();
-  });
+  }).done(function() {
+    informError("");
+  }).fail(function() {
+    informError("Jugador no encontrado");
+    document.getElementById("table").innerHTML = "";
+})
 }
 
 function left(e)
@@ -83,6 +75,17 @@ function refreshTable()
   document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
 }
 
+function informError(info){
+  document.getElementById("PlayerError").innerHTML = info;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+
+var pageBestPlayers = 0;
+let bestPlayers = undefined;
+
 function refreshBestPlayers()
 {
 
@@ -103,5 +106,17 @@ function refreshBestPlayers()
 }
 
 window.onload = function() {
-  //getBestPlayers();
+  //getBestPlayers(10);
 };
+
+function getBestPlayers(x){
+  var url = "http://localhost:25565/accounts/top/" + x;
+
+
+  $.get(url, function(data, status){
+
+    bestPlayers = data.bestPlayers;
+
+    refreshBestPlayers();
+  });
+}

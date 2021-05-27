@@ -12,11 +12,12 @@
     <script src="./js/scripts.js" type="module"></script>
 </head>
 <body>
-    <h1>Players</h1>
+    <center><h1>Players</h1></center>
     <div class="form-row justify-content-center">
         <input id="searchID" placeholder="ID" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
         <button id="getData">Get Data</button>
     </div>
+    <center><h3 id="PlayerError"></h3></center>
     <br/>
     <br/>
     <br/>
@@ -38,7 +39,12 @@
         </tbody>
     </table>
     <p></p>
-    <h2>Best Players</h2>
+    <center><h2>Best Players</h2></center>
+    <div class="form-row justify-content-center">
+        <button id="leftBestPlayers" class="btn btn-primary" disabled>&lt&lt</button>
+        <p id="currentPage" class="btn" > 0 </p>
+        <button id="rightBestPlayers" class="btn btn-primary" disabled>&gt&gt</button>
+    </div>
     <table>
         <thead>
             <tr>

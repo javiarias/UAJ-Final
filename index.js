@@ -78,10 +78,7 @@ async function getInfo(req, res)
 
   if (currentPlayer === null) return res.status(404).send({message: "No se ha encontrado jugador"});
 
-  if(currentPlayer.history !== undefined)
-    currentHistory = currentPlayer.history.concat(currentPlayer.pending);
-  else
-    currentHistory = currentPlayer.pending;
+  currentHistory = currentPlayer.history.concat(currentPlayer.pending);
 
   //return res.send({poggers: "poggers"});
   return res.send({currentPlayer, currentHistory});
