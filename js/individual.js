@@ -63,6 +63,11 @@ function right(e)
 function refreshPlayerTable(){
   document.getElementById("InfoPlayerTable").innerHTML = "";
 
+  var time = (currentPlayer.totalTime / currentPlayer.totalGames) * 45.0;
+
+  var mins = ('00' + Math.trunc(time / 60.0)).slice(-2);
+  var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
+
   var str = "<tr>"
   str += "<td>" + currentPlayer.nick + "</td>";
   str += "<td>" + currentPlayer.rating+ "</td>";
@@ -70,7 +75,7 @@ function refreshPlayerTable(){
   str += "<td>" + currentPlayer.wins + "</td>";
   str += "<td>" + currentPlayer.draws + "</td>";
   str += "<td>" + currentPlayer.losses + "</td>";
-  str += "<td>" + currentPlayer.totalTime + "</td>";
+  str += "<td>" + mins + ":" + secs + "</td>";
   str += "</tr>";
   document.getElementById("InfoPlayerTable").innerHTML += str;
 }
@@ -112,18 +117,18 @@ function refreshCharacterTable(){
           cell1.appendChild(imgUser);
 
           var victoryRate = Math.round((value.wins / value.totalGames) * 10000) / 100;
+          
           cell2.innerHTML = victoryRate.toFixed(2) + "%";
 
           cell3.innerHTML = value.totalGames;
 
-          var time = value.totalTime;
-          time = (time * 45.0)/value.totalGames;
+          var time = (value.totalTime * 45.0) / value.totalGames;
 
           var mins = ('00' + Math.trunc(time / 60.0)).slice(-2);
           var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
 
           cell4.innerHTML = mins + ":" + secs;
-          cell5.innerHTML = value.totalAccuracy.toFixed(2);
+          cell5.innerHTML = (value.totalAccuracy / value.totalGames).toFixed(2) + "%";
       });
     }
 }

@@ -12,11 +12,20 @@
     <script src="./js/rankings.js" type="module"></script>
 </head>
 <body>
-    <div class="topnav">
-        <a href="index.html">Search Players</a>
-        <a class="active" href="rankings.html">Overall clasifications</a>
-        <img src="images/Logo.png" alt="Tefege">
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+      <img src="images/Logo.png" alt="Tefege" style="width:100px;height:auto;">
+
+      <ul class="nav topnav" id="myTab" style="margin-left: 10px;">
+        <li class="nav-item">
+            <a class="active" href="index.html">Search Players</a>
+        </li>
+        <li class="nav-item">
+            <a href="rankings.html">Overall clasifications</a>
+        </li>
+      </ul>
+
+    </nav>
     <center><h1>Best Players</h1></center>
     <div class="form-row justify-content-center">
         <input id="searchID" placeholder="Top X players" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
