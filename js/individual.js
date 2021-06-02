@@ -36,6 +36,7 @@ function getPlayerData(e)
     maxPages = Math.trunc(currentHistory.length / pageSize);
 
     refreshTable();
+    refreshPlayerTable();
   }).done(function() {
     informError("");
   }).fail(function() {
@@ -58,6 +59,25 @@ function right(e)
   refreshTable();
 }
 
+function refreshPlayerTable(){
+  document.getElementById("InfoPlayerTable").innerHTML = "";
+  var table = document.getElementById("InfoPlayerTable");
+
+  var winPercentage = currentPlayer.wins/currentPlayer.totalGames;
+  var drawPercentage = currentPlayer.draws/currentPlayer.totalGames;
+  var losePercentage = currentPlayer.losses/currentPlayer.totalGames;
+
+  var str = "<tr>"
+  str += "<td>" + currentPlayer.nick + "</td>";
+  str += "<td>" + currentPlayer.rating+ "</td>";
+  str += "<td>" + currentPlayer.totalGames + "</td>";
+  str += "<td>" + currentPlayer.wins + "</td>";
+  str += "<td>" + currentPlayer.draws + "</td>";
+  str += "<td>" + currentPlayer.losses + "</td>";
+  str += "<td>" + currentPlayer.totalTime + "</td>";
+  str += "</tr>";
+  document.getElementById("InfoPlayerTable").innerHTML += str;
+}
 function refreshTable()
 {
   document.getElementById("right").disabled = page >= maxPages;
