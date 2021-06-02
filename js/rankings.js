@@ -78,7 +78,10 @@ function refreshBestPlayers()
     if(element.characterInfo)
     {
       Object.entries(element.characterInfo).forEach(([key, value]) => {
-        if(value.totalGames > uses)  mostUsedCharacter = key;
+        if(value.totalGames > uses) {
+          uses = value.totalGames; 
+          mostUsedCharacter = key;
+        }
       });
     }
 

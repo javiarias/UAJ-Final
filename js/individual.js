@@ -37,6 +37,7 @@ function getPlayerData(e)
 
     refreshTable();
     refreshPlayerTable();
+    refreshCharacterTable();
   }).done(function() {
     informError("");
   }).fail(function() {
@@ -61,11 +62,6 @@ function right(e)
 
 function refreshPlayerTable(){
   document.getElementById("InfoPlayerTable").innerHTML = "";
-  var table = document.getElementById("InfoPlayerTable");
-
-  var winPercentage = currentPlayer.wins/currentPlayer.totalGames;
-  var drawPercentage = currentPlayer.draws/currentPlayer.totalGames;
-  var losePercentage = currentPlayer.losses/currentPlayer.totalGames;
 
   var str = "<tr>"
   str += "<td>" + currentPlayer.nick + "</td>";
@@ -78,6 +74,60 @@ function refreshPlayerTable(){
   str += "</tr>";
   document.getElementById("InfoPlayerTable").innerHTML += str;
 }
+
+function refreshCharacterTable(){
+  document.getElementById("InfoPlayerCharacters").innerHTML = "";
+  if(currentPlayer.characterInfo)
+    {
+      let i = 0;
+      Object.entries(currentPlayer.characterInfo).forEach(([key, value]) => {
+        var table = document.getElementById("InfoPlayerCharacters");
+        var row = table.insertRow(i);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+
+        var imgUser = document.createElement('img');
+        imgUser.style="width:64px;height:64px;"
+          var str = "<tr>"
+          switch(key){
+            case "ManoloMcFly":
+              imgUser.src = '/images/Manolo McFly.png';
+              break;
+            case "CamomilaSestima":
+              imgUser.src = '/images/Camomila Sestima.png';
+              break;
+            case "BobOjocojo":
+              imgUser.src = '/images/Bob Ojocojo.png';
+                break;
+            case "Chuerk":
+              imgUser.src = '/images/Chuerk.png';
+                break;
+            case "BadBaby":
+              imgUser.src = '/images/Bad Baby.png';
+                break;
+          }
+          cell1.appendChild(imgUser);
+
+          var victoryRate = Math.round((value.wins / value.totalGames) * 10000) / 100;
+          cell2.innerHTML = victoryRate.toFixed(2) + "%";
+
+          cell3.innerHTML = value.totalGames;
+
+          var time = value.totalTime;
+          time = (time * 45.0)/value.totalGames;
+
+          var mins = ('00' + Math.trunc(time / 60.0)).slice(-2);
+          var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
+
+          cell4.innerHTML = mins + ":" + secs;
+          cell5.innerHTML = value.totalAccuracy.toFixed(2);
+      });
+    }
+}
+
 function refreshTable()
 {
   document.getElementById("right").disabled = page >= maxPages;
