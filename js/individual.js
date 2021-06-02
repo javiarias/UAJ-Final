@@ -89,13 +89,39 @@ function refreshTable()
     var mins = ('00' + Math.trunc(time / 60.0)).slice(-2);
     var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
 
-    var str = "<tr>"
-    str += "<td>" + result + "</td>";
-    str += "<td>" + mins + ":" + secs+ "</td>";
-    str += "<td>" + element.rivalNick + "</td>";
-    str += "</tr>";
+    var table = document.getElementById("table");
+    var row = table.insertRow(0);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
 
-    document.getElementById("table").innerHTML += str;
+    switch(result){
+      case "Victory":
+        row.style.backgroundColor = "8FE34D";
+        break;
+      case "Loss":
+        row.style.backgroundColor = "F07256";
+        break;
+      case "Draw":
+        row.style.backgroundColor = "E1E64B";
+        break;
+    }
+
+    var imgUser = document.createElement('img');
+    var imgRival = document.createElement('img');
+    imgUser.src = '/images/' + element.playerChar + '.png';
+    imgRival.src = '/images/' + element.rivalChar + '.png';
+    imgUser.style="width:48px;height:48px;"
+    imgRival.style="width:48px;height:48px;"
+
+    cell1.appendChild(imgUser);
+    cell2.innerHTML = result;
+    cell3.innerHTML = mins + ":" + secs;
+    cell4.innerHTML = element.rivalNick;
+    cell5.appendChild(imgRival);
+
   }
 
   document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
