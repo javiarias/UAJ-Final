@@ -15,11 +15,18 @@ document.getElementById("left").disabled = true;
 document.getElementById("right").disabled = true;
 document.getElementById("currentPage").innerHTML = "0 / 0";
 
+function is_numeric(str){
+  return /^\d+$/.test(str);
+}
+
 function getPlayerData(e)
 {
   var id = document.getElementById("searchID").value;
 
-  var url = "http://localhost:25565/accounts/by-id/" + id;
+  if(is_numeric(id))
+    var url = "http://localhost:25565/accounts/by-id/" + id;
+  else
+    var url = "http://localhost:25565/accounts/by-nick/" + id;
 
 
   $.get(url, function(data, status){
@@ -38,11 +45,14 @@ function getPlayerData(e)
     refreshTable();
     refreshPlayerTable();
     refreshCharacterTable();
+    
   }).done(function() {
     informError("");
   }).fail(function() {
     informError("Jugador no encontrado");
     document.getElementById("table").innerHTML = "";
+    document.getElementById("InfoPlayerTable").innerHTML = "";
+    document.getElementById("InfoPlayerCharacters").innerHTML = "";
   });
 }
 

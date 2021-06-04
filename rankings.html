@@ -18,14 +18,31 @@
 
       <ul class="nav topnav" id="myTab" style="margin-left: 10px;">
         <li class="nav-item">
-            <a class="active" href="index.html">Search Players</a>
+            <a href="index.html">Search Players</a>
         </li>
         <li class="nav-item">
-            <a href="rankings.html">Overall clasifications</a>
+            <a  class="active" href="rankings.html">Overall clasifications</a>
         </li>
       </ul>
 
     </nav>
+    <br/>
+    <center><h1>Character Statistics</h1></center>
+    <script src="https://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <table class="sortable">
+        <thead>
+            <tr>
+                <th>Character</th>
+                <th>Winrate</th>
+                <th>Total Games</th>
+                <th>Average Time per Round</th>
+                <th>Average Accuracy</th>
+            </tr>
+        </thead>
+        <tbody id="CharacterStats">
+        </tbody>
+    </table>
+    <br/>
     <center><h1>Best Players</h1></center>
     <div class="form-row justify-content-center">
         <input id="searchID" placeholder="Top X players" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
@@ -53,5 +70,10 @@
         <tbody id="table">
         </tbody>
     </table>
-    <p></p>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 </body>
