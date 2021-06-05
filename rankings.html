@@ -43,6 +43,24 @@
         </tbody>
     </table>
     <br/>
+    <br/>
+    <div>
+        <table>
+            <thead>
+                <tr>                    
+                    <th>Character One</th>
+                    <th>Winrate VS</th>
+                    <th>Character Two</th>
+                </tr>
+            </thead>
+            <tbody id="CharacterWinrate">
+            </tbody>
+        </table>
+        <div class="WinrateSelector">
+            <select name="char1" id="char1"></select>
+            <select name="char2" id="char2"></select>
+        </div>
+    </div>
     <center><h1>Best Players</h1></center>
     <div class="form-row justify-content-center">
         <input id="searchID" placeholder="Top X players" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />

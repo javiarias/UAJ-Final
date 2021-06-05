@@ -1,4 +1,10 @@
 /* usa este fichero para personalizar tus vistas */
+* {
+  margin: 0px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 .msg {
     font-size: 60%;
 }
@@ -80,6 +86,7 @@ table
     width: 100%;
     border-radius: 1em;
     border-collapse: collapse;
+    text-align: center;
 }
 th, td { 
     padding: 8px 16px; 
@@ -147,6 +154,15 @@ th
     height: auto;
     border-collapse: collapse;
     text-align: center;
+}
+
+/*Para centrar el selector de winrate*/
+.WinrateSelector{
+  display: flex;
+  justify-content: space-between;
+  margin: auto;
+  width: 78%;
+  margin-top: 40px;
 }
 
 
