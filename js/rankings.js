@@ -210,8 +210,6 @@ function refreshWinrate(wr, char1, char2){
     cell2.innerHTML = wr + "%";
   else
     cell2.innerHTML = "No data";
-
-  document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
 }
 
 function informError(info){
@@ -228,7 +226,9 @@ function getCharacterStatistics(){
   for (var x in charactersNames) {
     char2.options[char2.options.length] = new Option(x, x);
   }
+
   char2.value = next(char1.value);
+  
   char1.onchange = function() {
     if(char1.value == char2.value){
       char2.value = next(char1.value);

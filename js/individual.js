@@ -23,10 +23,7 @@ function getPlayerData(e)
 {
   var id = document.getElementById("searchID").value;
 
-  if(is_numeric(id))
-    var url = "http://localhost:25565/accounts/by-id/" + id;
-  else
-    var url = "http://localhost:25565/accounts/by-nick/" + id;
+  var url = "http://localhost:25565/accounts/by-nick/" + id;
 
 
   $.get(url, function(data, status){
@@ -45,6 +42,7 @@ function getPlayerData(e)
     refreshTable();
     refreshPlayerTable();
     refreshCharacterTable();
+    getCharacterStatistics();
     
   }).done(function() {
     informError("");
@@ -80,11 +78,15 @@ function refreshPlayerTable(){
 
   var str = "<tr>"
   str += "<td>" + currentPlayer.nick + "</td>";
-  str += "<td>" + currentPlayer.rating+ "</td>";
+  str += "<td>" + currentPlayer.rating + "</td>";
+  str += "<td>" + currentPlayer.creation + "</td>";
+  str += "<td>" + currentPlayer.lastGame + "</td>";
   str += "<td>" + currentPlayer.totalGames + "</td>";
-  str += "<td>" + currentPlayer.wins + "</td>";
-  str += "<td>" + currentPlayer.draws + "</td>";
-  str += "<td>" + currentPlayer.losses + "</td>";
+
+  var aux = currentPlayer.wins + " / " + currentPlayer.draws + " / " + currentPlayer.losses + "<br/>";
+  aux += ((currentPlayer.wins / currentPlayer.totalGames) * 100).toFixed(2) + "% / " + ((currentPlayer.draws / currentPlayer.totalGames) * 100).toFixed(2) + "% / " + ((currentPlayer.losses / currentPlayer.totalGames) * 100).toFixed(2) + "%";
+
+  str += "<td>" + aux + "</td>";
   str += "<td>" + mins + ":" + secs + "</td>";
   str += "</tr>";
   document.getElementById("InfoPlayerTable").innerHTML += str;
@@ -130,7 +132,7 @@ function refreshCharacterTable(){
           
           cell2.innerHTML = victoryRate.toFixed(2) + "%";
 
-          cell3.innerHTML = value.totalGames;
+          cell3.innerHTML = value.totalGames + "  (" + ((value.totalGames / currentPlayer.totalGames) * 100).toFixed(2) + "%)";
 
           var time = (value.totalTime * 45.0) / value.totalGames;
 
@@ -181,16 +183,18 @@ function refreshTable()
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
     var cell5 = row.insertCell(4);
+    var cell6 = row.insertCell(5);
+    var cell7 = row.insertCell(6);
 
     switch(result){
       case "Victory":
-        row.style.backgroundColor = "8FE34D";
+        row.style.backgroundColor = "aef28d";
         break;
       case "Loss":
-        row.style.backgroundColor = "F07256";
+        row.style.backgroundColor = "f58282";
         break;
       case "Draw":
-        row.style.backgroundColor = "E1E64B";
+        row.style.backgroundColor = "fff9a6";
         break;
     }
 
@@ -201,17 +205,143 @@ function refreshTable()
     imgUser.style="width:48px;height:48px;"
     imgRival.style="width:48px;height:48px;"
 
+    var dmgToShots = 0;
+
+    if(element.shotsFired > 0) dmgToShots = (element.dmgDealt / element.shotsFired);
+
     cell1.appendChild(imgUser);
-    cell2.innerHTML = result;
+    cell2.innerHTML = result + "<br/>";
+
+    element.rounds.forEach(round => {
+      var imgUser = document.createElement('img');
+      imgUser.style="width:14px;height:23px;"
+
+      if(round.result > 0.5) imgUser.src = '/images/resultWin.png';
+      else if (round.result < 0.5) imgUser.src = '/images/resultLoss.png';
+      else round.result = imgUser.src = '/images/resultDraw.png';
+
+      cell2.appendChild(imgUser);
+      cell2.innerHTML += " ";
+    });
+
     cell3.innerHTML = mins + ":" + secs;
-    cell4.innerHTML = element.rivalNick;
-    cell5.appendChild(imgRival);
+    cell4.innerHTML = element.accuracy.toFixed(2) + "%";
+    cell5.innerHTML = dmgToShots.toFixed(2) + " HP";
+    cell6.innerHTML = element.rivalNick;
+    cell7.appendChild(imgRival);
 
   }
 
   document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
 }
 
+function checkImage(key){
+  var imgUser = document.createElement('img');
+  imgUser.style="width:64px;height:64px;"
+          var str = "<tr>"
+          switch(key){
+            case "ManoloMcFly":
+              imgUser.src = '/images/Manolo McFly.png';
+              break;
+            case "CamomilaSestima":
+              imgUser.src = '/images/Camomila Sestima.png';
+              break;
+            case "BobOjocojo":
+              imgUser.src = '/images/Bob Ojocojo.png';
+                break;
+            case "Chuerk":
+              imgUser.src = '/images/Chuerk.png';
+                break;
+            case "BadBaby":
+              imgUser.src = '/images/Bad Baby.png';
+                break;
+          }
+    return imgUser;
+}
+
+var charactersNames = { "ManoloMcFly": 0, "BadBaby": 1, "CamomilaSestima":2, "BobOjocojo":3, "Chuerk": 4 }
+
+function refreshWinrate(wr, char1, char2){
+  document.getElementById("right").disabled = page >= maxPages;
+  document.getElementById("left").disabled = page == 0;
+
+  document.getElementById("CharacterWinrate").innerHTML = "";
+
+  var table = document.getElementById("CharacterWinrate");
+  var row = table.insertRow(0);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+
+  
+  cell1.appendChild(checkImage(char1));
+  cell3.appendChild(checkImage(char2));
+
+  if(wr != -1)
+    cell2.innerHTML = wr + "%";
+  else
+    cell2.innerHTML = "No data";
+
+  document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
+}
+
 function informError(info){
   document.getElementById("PlayerError").innerHTML = info;
+}
+
+function getCharacterStatistics(){
+  var char1 = document.getElementById("char1");
+  var char2 = document.getElementById("char2");
+
+  for (var x in charactersNames) {
+    char1.options[char1.options.length] = new Option(x, x);
+  }
+  for (var x in charactersNames) {
+    char2.options[char2.options.length] = new Option(x, x);
+  }
+
+  char2.value = next(char1.value);
+  
+  char1.onchange = function() {
+    if(char1.value == char2.value){
+      //char2.value = next(char1.value);
+    }
+    refreshWinrate(getCharacterWinrate(char1.value, char2.value), char1.value, char2.value);
+  }
+  
+  char2.onchange = function() {
+    if(char1.value == char2.value){
+      //char1.value = next(char1.value);
+    }
+    refreshWinrate(getCharacterWinrate(char1.value, char2.value), char1.value, char2.value);
+  }
+  refreshWinrate(getCharacterWinrate(char1.value, char2.value), char1.value, char2.value);
+}
+
+var next = function(key) {
+  var i = 0
+  var j = 0;
+  for (var name in charactersNames) {
+    if (name === key) {
+      j = i;
+    }
+    i++;
+  }
+  var len = i;
+  i = 0;
+  for (var name in charactersNames) {
+    if (i === (j + 1)%len) {
+      return name;
+    }
+    i++;
+  }
+
+};
+
+function getCharacterWinrate(char1, char2){
+  var character = currentPlayer.characterInfo[char1];
+  var against = character[char2];
+  if(against === undefined)
+    return -1;
+  return Math.round(10000*against.wins / against.totalGames)/100;
 }

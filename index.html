@@ -28,7 +28,7 @@
     </nav>
     <center><h1>Players</h1></center>
     <div class="form-row justify-content-center">
-        <input id="searchID" placeholder="ID"/>
+        <input id="searchID" placeholder="Nickname"/>
         <button id="getData">Get Data</button>
     </div>
     <center><h3 id="PlayerError"></h3></center>
@@ -40,12 +40,12 @@
         <thead>
             <tr>
                 <th>Nick</th>
-                <th>Elo</th>
-                <th>Total games</th>
-                <th>Wins</th>
-                <th>Draws</th>
-                <th>Loses</th>
-                <th>Average Time</th>
+                <th>Rating</th>
+                <th>Creation Date</th>
+                <th>Last Game Date</th>
+                <th>Games Played</th>
+                <th>Wins / Draws / Loses</th>
+                <th>Average Game Time</th>
             </tr>
         </thead>
         <tbody id="InfoPlayerTable">
@@ -61,9 +61,9 @@
         <thead>
             <tr>
                 <th>Character</th>
-                <th>Winrate</th>
-                <th>Games</th>
-                <th>Average Time</th>
+                <th>Win %</th>
+                <th>Games Played</th>
+                <th>Average Round Time</th>
                 <th>Average Accuracy</th>
             </tr>
         </thead>
@@ -72,6 +72,28 @@
     </table>
     <br/>
     <br/>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Character One</th>
+                    <th>Win % VS</th>
+                    <th>Character Two</th>
+                </tr>
+            </thead>
+            <tbody id="CharacterWinrate">
+            </tbody>
+            <tr class="WinrateSelector">
+                <td>                    
+                    <select name="char1" id="char1"></select>
+                </td>
+                <td></td>
+                <td>
+                    <select name="char2" id="char2"></select>
+                </td>
+            </tr>
+        </table>
+    </div>
     <br/>
     <br/>
     <div class="form-row justify-content-center">
@@ -87,6 +109,8 @@
                 <th>Character used</th>
                 <th>Round Results</th>
                 <th>Total Game Time</th>
+                <th>Accuracy</th>
+                <th>Damage Per Bullet</th>
                 <th>Opponent</th>
                 <th>Opponent character</th>
             </tr>
