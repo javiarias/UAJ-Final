@@ -156,13 +156,9 @@ th
     text-align: center;
 }
 
-/*Para centrar el selector de winrate*/
-.WinrateSelector{
-  display: flex;
-  justify-content: space-between;
-  margin: auto;
-  width: 78%;
-  margin-top: 40px;
+/*Para quitar las lineas de la tabla de los selectores*/
+.WinrateSelector td{
+  border: none;
 }
 
 
