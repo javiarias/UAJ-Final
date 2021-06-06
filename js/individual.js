@@ -168,26 +168,27 @@ function refreshTable()
     imgUser.style="width:48px;height:48px;"
     imgRival.style="width:48px;height:48px;"
 
-    var dmgToShots = 0;
-
-    if(element.shotsFired > 0) dmgToShots = (element.dmgDealt / element.shotsFired);
-
     cell1.appendChild(imgUser);
     cell2.innerHTML = result + "<br/>";
-
+    
     element.rounds.forEach(round => {
       var imgUser = document.createElement('img');
       imgUser.style="width:14px;height:23px;"
-
+      
       if(round.result > 0.5) imgUser.src = '/images/resultWin.png';
       else if (round.result < 0.5) imgUser.src = '/images/resultLoss.png';
       else round.result = imgUser.src = '/images/resultDraw.png';
-
+      
       cell2.appendChild(imgUser);
       cell2.innerHTML += " ";
     });
-
+    
     cell3.innerHTML = mins + ":" + secs;
+
+    var dmgToShots = 0;
+
+    if(element.shotsFired > 0) dmgToShots = (element.dmgDealt / element.shotsFired);
+    
     cell4.innerHTML = element.accuracy.toFixed(2) + "%";
     cell5.innerHTML = dmgToShots.toFixed(2) + " HP";
     cell6.innerHTML = element.rivalNick;
