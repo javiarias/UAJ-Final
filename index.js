@@ -2,7 +2,7 @@ const MongoJS = require('./MongoJS/mongoJS.js');
 var fs = require('fs');
 
 const USE_CUSTOM_URI = true;
-const URI_PATH = './sensitive/uri.uri';
+const URI_PATH = './uri.uri';
 
 //import express from 'express';
 const Express = require('express');
