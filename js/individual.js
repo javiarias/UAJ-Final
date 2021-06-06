@@ -1,3 +1,5 @@
+import * as Common from "./common.mjs";
+
 var currentPlayer = {};
 
 var pageSize = 15;
@@ -14,6 +16,16 @@ document.getElementById("right").onclick = right;
 document.getElementById("left").disabled = true;
 document.getElementById("right").disabled = true;
 document.getElementById("currentPage").innerHTML = "0 / 0";
+
+document.getElementById("searchID").addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.key === "Enter") {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    document.getElementById("getData").click();
+  }
+}); 
 
 function is_numeric(str){
   return /^\d+$/.test(str);
@@ -41,26 +53,27 @@ function getPlayerData(e)
 
     refreshTable();
     refreshPlayerTable();
-    refreshCharacterTable();
+    Common.refreshCharacterTable(document.getElementById("InfoPlayerCharacters"), currentPlayer.characterInfo, currentPlayer.totalGames);
     getCharacterStatistics();
+
     
   }).done(function() {
-    informError("");
+    Common.informError(document.getElementById("PlayerError"), "");
+    document.getElementById("pageContent").hidden = false;
   }).fail(function() {
-    informError("Jugador no encontrado");
+    Common.informError(document.getElementById("PlayerError"), "Player not found");
+    document.getElementById("pageContent").hidden = true;
     document.getElementById("table").innerHTML = "";
     document.getElementById("InfoPlayerTable").innerHTML = "";
     document.getElementById("InfoPlayerCharacters").innerHTML = "";
   });
 }
-
 function left(e)
 {
   page--;
 
   refreshTable();
 }
-
 function right(e)
 {  
   page++;
@@ -76,11 +89,14 @@ function refreshPlayerTable(){
   var mins = ('00' + Math.trunc(time / 60.0)).slice(-2);
   var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
 
+  var creation = new Date(currentPlayer.creation);
+  var lastGame = new Date(currentPlayer.lastGame);
+
   var str = "<tr>"
   str += "<td>" + currentPlayer.nick + "</td>";
   str += "<td>" + currentPlayer.rating + "</td>";
-  str += "<td>" + currentPlayer.creation + "</td>";
-  str += "<td>" + currentPlayer.lastGame + "</td>";
+  str += "<td>" + creation.toLocaleDateString() + "</td>";
+  str += "<td>" + Common.timeSince(lastGame) + " ago </td>";
   str += "<td>" + currentPlayer.totalGames + "</td>";
 
   var aux = currentPlayer.wins + " / " + currentPlayer.draws + " / " + currentPlayer.losses + "<br/>";
@@ -90,59 +106,6 @@ function refreshPlayerTable(){
   str += "<td>" + mins + ":" + secs + "</td>";
   str += "</tr>";
   document.getElementById("InfoPlayerTable").innerHTML += str;
-}
-
-function refreshCharacterTable(){
-  document.getElementById("InfoPlayerCharacters").innerHTML = "";
-  if(currentPlayer.characterInfo)
-    {
-      let i = 0;
-      Object.entries(currentPlayer.characterInfo).forEach(([key, value]) => {
-        var table = document.getElementById("InfoPlayerCharacters");
-        var row = table.insertRow(i);
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-        var cell5 = row.insertCell(4);
-
-        var imgUser = document.createElement('img');
-        imgUser.style="width:64px;height:64px;"
-          var str = "<tr>"
-          switch(key){
-            case "ManoloMcFly":
-              imgUser.src = '/images/Manolo McFly.png';
-              break;
-            case "CamomilaSestima":
-              imgUser.src = '/images/Camomila Sestima.png';
-              break;
-            case "BobOjocojo":
-              imgUser.src = '/images/Bob Ojocojo.png';
-                break;
-            case "Chuerk":
-              imgUser.src = '/images/Chuerk.png';
-                break;
-            case "BadBaby":
-              imgUser.src = '/images/Bad Baby.png';
-                break;
-          }
-          cell1.appendChild(imgUser);
-
-          var victoryRate = Math.round((value.wins / value.totalGames) * 10000) / 100;
-          
-          cell2.innerHTML = victoryRate.toFixed(2) + "%";
-
-          cell3.innerHTML = value.totalGames + "  (" + ((value.totalGames / currentPlayer.totalGames) * 100).toFixed(2) + "%)";
-
-          var time = (value.totalTime * 45.0) / value.totalGames;
-
-          var mins = ('00' + Math.trunc(time / 60.0)).slice(-2);
-          var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
-
-          cell4.innerHTML = mins + ":" + secs;
-          cell5.innerHTML = (value.totalAccuracy / value.totalGames).toFixed(2) + "%";
-      });
-    }
 }
 
 function refreshTable()
@@ -177,7 +140,7 @@ function refreshTable()
     var secs = ('00' + Math.trunc(time % 60.0)).slice(-2);
 
     var table = document.getElementById("table");
-    var row = table.insertRow(0);
+    var row = table.insertRow();
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
@@ -188,13 +151,13 @@ function refreshTable()
 
     switch(result){
       case "Victory":
-        row.style.backgroundColor = "aef28d";
+        row.style.backgroundColor = Common.winColor;
         break;
       case "Loss":
-        row.style.backgroundColor = "f58282";
+        row.style.backgroundColor = Common.lossColor;
         break;
       case "Draw":
-        row.style.backgroundColor = "fff9a6";
+        row.style.backgroundColor = Common.drawColor;
         break;
     }
 
@@ -235,32 +198,6 @@ function refreshTable()
   document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
 }
 
-function checkImage(key){
-  var imgUser = document.createElement('img');
-  imgUser.style="width:64px;height:64px;"
-          var str = "<tr>"
-          switch(key){
-            case "ManoloMcFly":
-              imgUser.src = '/images/Manolo McFly.png';
-              break;
-            case "CamomilaSestima":
-              imgUser.src = '/images/Camomila Sestima.png';
-              break;
-            case "BobOjocojo":
-              imgUser.src = '/images/Bob Ojocojo.png';
-                break;
-            case "Chuerk":
-              imgUser.src = '/images/Chuerk.png';
-                break;
-            case "BadBaby":
-              imgUser.src = '/images/Bad Baby.png';
-                break;
-          }
-    return imgUser;
-}
-
-var charactersNames = { "ManoloMcFly": 0, "BadBaby": 1, "CamomilaSestima":2, "BobOjocojo":3, "Chuerk": 4 }
-
 function refreshWinrate(wr, char1, char2){
   document.getElementById("right").disabled = page >= maxPages;
   document.getElementById("left").disabled = page == 0;
@@ -274,8 +211,8 @@ function refreshWinrate(wr, char1, char2){
   var cell3 = row.insertCell(2);
 
   
-  cell1.appendChild(checkImage(char1));
-  cell3.appendChild(checkImage(char2));
+  cell1.appendChild(Common.checkImage(char1));
+  cell3.appendChild(Common.checkImage(char2));
 
   if(wr != -1)
     cell2.innerHTML = wr + "%";
@@ -285,58 +222,28 @@ function refreshWinrate(wr, char1, char2){
   document.getElementById("currentPage").innerHTML = (page + 1) + " / " + (maxPages + 1);
 }
 
-function informError(info){
-  document.getElementById("PlayerError").innerHTML = info;
-}
-
 function getCharacterStatistics(){
   var char1 = document.getElementById("char1");
   var char2 = document.getElementById("char2");
 
-  for (var x in charactersNames) {
+  for (var x in Common.charactersNames) {
     char1.options[char1.options.length] = new Option(x, x);
   }
-  for (var x in charactersNames) {
+  for (var x in Common.charactersNames) {
     char2.options[char2.options.length] = new Option(x, x);
   }
 
-  char2.value = next(char1.value);
+  char2.value = Common.next(char1.value);
   
   char1.onchange = function() {
-    if(char1.value == char2.value){
-      //char2.value = next(char1.value);
-    }
     refreshWinrate(getCharacterWinrate(char1.value, char2.value), char1.value, char2.value);
   }
   
   char2.onchange = function() {
-    if(char1.value == char2.value){
-      //char1.value = next(char1.value);
-    }
     refreshWinrate(getCharacterWinrate(char1.value, char2.value), char1.value, char2.value);
   }
   refreshWinrate(getCharacterWinrate(char1.value, char2.value), char1.value, char2.value);
 }
-
-var next = function(key) {
-  var i = 0
-  var j = 0;
-  for (var name in charactersNames) {
-    if (name === key) {
-      j = i;
-    }
-    i++;
-  }
-  var len = i;
-  i = 0;
-  for (var name in charactersNames) {
-    if (i === (j + 1)%len) {
-      return name;
-    }
-    i++;
-  }
-
-};
 
 function getCharacterWinrate(char1, char2){
   var character = currentPlayer.characterInfo[char1];

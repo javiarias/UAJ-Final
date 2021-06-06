@@ -1,6 +1,9 @@
 const MongoJS = require('./MongoJS/mongoJS.js');
 var fs = require('fs');
 
+const Redefinitions = require("./redefinitions.js");
+MongoJS.sendRoundInfo = Redefinitions.sendRoundInfo;
+
 const USE_CUSTOM_URI = true;
 const URI_PATH = './sensitive/uri.uri';
 
